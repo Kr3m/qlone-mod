@@ -944,6 +944,11 @@ static void CG_SetDeferredClientInfo( clientInfo_t *ci ) {
 				(cgs.gametype >= GT_TEAM && ci->team != match->team) ) {
 				continue;
 			}
+//freeze
+			if ( ci->team != TEAM_SPECTATOR && ci->team != match->team ) {
+				continue;
+			}
+//freeze
 			ci->deferred = qtrue;
 			CG_CopyClientInfoModel( match, ci );
 			return;
@@ -2438,6 +2443,11 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 			}
 		}
 		if ( state->powerups & ( 1 << PW_BATTLESUIT ) ) {
+//freeze
+			if ( !state->weapon )
+				ent->customShader = cgs.media.freezeShader;
+			else
+//freeze
 			ent->customShader = cgs.media.battleSuitShader;
 			trap_R_AddRefEntityToScene( ent );
 		}

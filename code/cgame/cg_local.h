@@ -800,6 +800,10 @@ typedef struct {
 	qhandle_t	burnMarkShader;
 	qhandle_t	holeMarkShader;
 	qhandle_t	energyMarkShader;
+//freeze
+	qhandle_t	freezeShader;
+	qhandle_t	freezeMarkShader;
+//freeze
 
 	// powerup shaders
 	qhandle_t	quadShader;
@@ -1573,6 +1577,12 @@ void CG_Respawn( void );
 void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops );
 void CG_CheckChangedPredictableEvents( playerState_t *ps );
 
+//freeze
+void CG_Drop_f( void );
+void CG_BodyObituary( entityState_t *ent, char *targetName );
+qboolean Q_Isfreeze( int clientNum );
+void CG_AddGib( localEntity_t *le );
+//freeze
 
 //===============================================
 

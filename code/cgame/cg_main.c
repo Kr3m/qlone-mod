@@ -924,6 +924,10 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.invisShader = trap_R_RegisterShader("powerups/invisibility" );
 	cgs.media.regenShader = trap_R_RegisterShader("powerups/regen" );
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff" );
+//freeze
+	cgs.media.freezeShader = trap_R_RegisterShader( "freezeShader" );
+	cgs.media.freezeMarkShader = trap_R_RegisterShader( "freezeMarkShader" );
+//freeze
 
 #ifdef MISSIONPACK
 	if ( cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF || cgs.gametype == GT_HARVESTER || cg_buildScript.integer ) {
@@ -1673,11 +1677,18 @@ static const char *CG_FeederItemText(float feederID, int index, int column, qhan
 				if (team == -1) {
 					return "";
 				} else {
+					if ( Q_Isfreeze( sp->client ) )
+						*handle = cgs.media.noammoShader;
+					else
+//freeze
 					*handle = CG_StatusHandle(info->teamTask);
 				}
 		  break;
 			case 2:
 				if ( cg.snap->ps.stats[ STAT_CLIENTS_READY ] & ( 1 << sp->client ) ) {
+//freeze
+					if ( !Q_Isfreeze( sp->client ) )
+//freeze
 					return "Ready";
 				}
 				if (team == -1) {
@@ -1689,6 +1700,11 @@ static const char *CG_FeederItemText(float feederID, int index, int column, qhan
 						return "";
 					}
 				} else {
+//freeze
+					if ( cgs.gametype == GT_TEAM || cgs.gametype == GT_CTF ) {
+						return va( "%i %s", sp->scoreFlags, info->teamLeader ? "L" : "" );
+					}
+//freeze
 					if (info->teamLeader) {
 						return "Leader";
 					}

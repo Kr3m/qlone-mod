@@ -7,6 +7,8 @@ This project is now based on [baseq3a](https://github.com/ec-/baseq3a) by Eugene
 
 Qlone adds some nifty stuff like the FreezeTag gameplay, based on the Quake 3 [FreezeTag](https://github.com/dbircsak/freeze-tag) code by Darrell "Doolittle" Bircsak (only server-side ATM).
 
+New freeze client code to support frozen player skins added by Kr3m.
+
 ## New cvars
 
 * freezeTag <0|1> : default to 0. Toggle the Freeze Tag gameplay

@@ -2026,7 +2026,12 @@ static void CG_DrawCrosshair( void ) {
 
 		CG_ColorForHealth( hcolor );
 		trap_R_SetColor( hcolor );
-	} else {
+	}
+	else if ( cgs.crosshairColor[3] > 0.0f )
+	{
+		trap_R_SetColor( cgs.crosshairColor );
+	}	 
+	else {
 		trap_R_SetColor( NULL );
 	}
 

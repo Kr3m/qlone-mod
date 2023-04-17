@@ -1130,6 +1130,7 @@ typedef struct {
 
 	// media
 	cgMedia_t		media;
+	vec4_t			crosshairColor;
 
 	float			fov;		// clamped cg_fov value
 	float			zoomFov;	// clamped cg_zoomFov value
@@ -1261,6 +1262,7 @@ extern	vmCvar_t		cg_enableBreath;
 extern	vmCvar_t		cg_singlePlayerActive;
 extern  vmCvar_t		cg_recordSPDemo;
 extern  vmCvar_t		cg_recordSPDemoName;
+extern	vmCvar_t		cg_crosshairColor;
 extern	vmCvar_t		cg_obeliskRespawnDelay;
 #endif
 

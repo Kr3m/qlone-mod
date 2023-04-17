@@ -14,6 +14,7 @@ int enemyModelModificationCount  = -1;
 int	enemyColorsModificationCount = -1;
 int teamModelModificationCount  = -1;
 int	teamColorsModificationCount = -1;
+static int crosshairColorModificationCount = -1;
 
 void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum );
 void CG_Shutdown( void );
@@ -111,6 +112,7 @@ vmCvar_t	cg_crosshairSize;
 vmCvar_t	cg_crosshairX;
 vmCvar_t	cg_crosshairY;
 vmCvar_t	cg_crosshairHealth;
+vmCvar_t	cg_crosshairColor;
 vmCvar_t	cg_draw2D;
 vmCvar_t	cg_drawStatus;
 vmCvar_t	cg_animSpeed;
@@ -235,6 +237,7 @@ static const cvarTable_t cvarTable[] = {
 	{ &cg_drawRewards, "cg_drawRewards", "1", CVAR_ARCHIVE },
 	{ &cg_drawWeaponSelect, "cg_drawWeaponSelect", "1", CVAR_ARCHIVE },
 	{ &cg_crosshairSize, "cg_crosshairSize", "24", CVAR_ARCHIVE },
+	{ &cg_crosshairColor, "cg_crosshairColor", "0", CVAR_ARCHIVE},
 	{ &cg_crosshairHealth, "cg_crosshairHealth", "1", CVAR_ARCHIVE },
 	{ &cg_crosshairX, "cg_crosshairX", "0", CVAR_ARCHIVE },
 	{ &cg_crosshairY, "cg_crosshairY", "0", CVAR_ARCHIVE },
@@ -384,6 +387,55 @@ void CG_ForceModelChange( void ) {
 	}
 }
 
+/*
+===================
+CG_UpdateCrosshairColor
+===================
+*/
+static void CG_UpdateCrosshairColor( void ) {
+	const char	*s = cg_crosshairColor.string;
+	int			i;
+
+	if ( s[0] == '#' ) {
+		s++;
+	} else if ( s[0] == '0' && s[1] == 'x' ) {
+		s += 2;
+	}
+
+	for ( i = 0; i < 4; i++ ) {
+		byte	val = 0;
+		char	ch = *s++;
+
+		if ( isdigit( ch ) )
+			val += ch - '0';
+		else if ( 'a' <= ch && ch <= 'f' )
+			val += ch - 'a' + 10;
+		else if ( 'A' <= ch && ch <= 'F' )
+			val += ch - 'A' + 10;
+		else
+			break;
+
+		val *= 16;
+		ch = *s++;
+
+		if ( isdigit( ch ) )
+			val += ch - '0';
+		else if ( 'a' <= ch && ch <= 'f' )
+			val += ch - 'a' + 10;
+		else if ( 'A' <= ch && ch <= 'F' )
+			val += ch - 'A' + 10;
+		else
+			break;
+
+		cgs.crosshairColor[i] = val * (1.0f / 255.0f);
+	}
+
+	if ( i == 3 )
+		cgs.crosshairColor[3] = 1.0f;	// no alpha specified, default to 1
+	else if ( i != 4 )
+		cgs.crosshairColor[3] = 0.0f;	// alpha 0 means use original method
+}
+
 
 /*
 =================
@@ -429,6 +481,10 @@ void CG_UpdateCvars( void ) {
 		teamColorsModificationCount = cg_teamColors.modificationCount;
 
 		CG_ForceModelChange();
+	}
+	if ( crosshairColorModificationCount != cg_crosshairColor.modificationCount ) {
+		crosshairColorModificationCount = cg_crosshairColor.modificationCount;
+		CG_UpdateCrosshairColor();
 	}
 }
 
